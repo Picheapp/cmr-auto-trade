@@ -10,6 +10,7 @@ export default function VehicleCard({ v, t, lang, fav = false, loggedIn = false 
         {v.photos?.[0] ? <img src={v.photos[0]} alt={vTitle(v)} loading="lazy" /> : null}
         <span className="badge">{v.stock}</span>
         <span className={'badge st ' + v.status}>{t['st_' + v.status] || v.status}</span>
+        {v.created_at && Date.now() - new Date(v.created_at).getTime() < 14 * 864e5 && v.status === 'Available' ? <span className="badge new">{lang === 'es' ? 'NUEVO' : 'NEW'}</span> : null}
         {v.photos?.length ? <span className="cnt">📷 {v.photos.length}</span> : null}
       </div>
       <div className="bd">

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getVehicle, listVehicles, favIds } from '@/lib/vehicles';
-import { getSettings } from '@/lib/db';
+import { getSettings, q } from '@/lib/db';
+import { headers } from 'next/headers';
 import { getLang, dict, money, fmtNum, vTitle, waLink } from '@/lib/i18n';
 import { getUser } from '@/lib/auth';
 import Gallery from '@/components/Gallery';
@@ -32,6 +33,7 @@ export default async function VehiclePage({ params }) {
   if (!v || !['Available', 'Reserved', 'Pending', 'Sold'].includes(v.status)) notFound();
   const lang = getLang(); const t = dict(lang);
   const user = await getUser();
+  if (!/bot|crawl|spider|preview/i.test(headers().get('user-agent') || '')) await q('update vehicles set views = coalesce(views,0) + 1 where id=$1', [v.id]).catch(() => {});
   const [s, favs, similarA] = await Promise.all([
     getSettings(), favIds(user?.id),
     listVehicles({ category: v.categories?.[0], exclude: v.id, limit: 12 }),

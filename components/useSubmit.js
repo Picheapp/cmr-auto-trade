@@ -5,7 +5,7 @@ export function useSubmit() {
   async function submit(payload) {
     setState({ loading: true, ok: false, error: '' });
     try {
-      const r = await fetch('/api/forms', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+      const r = await fetch('/api/forms', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ source: getSource(), ...payload }) });
       const j = await r.json();
       if (!j.ok) throw new Error(j.error || 'Error');
       setState({ loading: false, ok: true, error: '' });
@@ -16,6 +16,9 @@ export function useSubmit() {
     }
   }
   return [state, submit, setState];
+}
+export function getSource() {
+  try { return sessionStorage.getItem('cmr_src') || 'Sitio web (directo)'; } catch { return 'Sitio web'; }
 }
 export function formObj(form) {
   const fd = new FormData(form); const o = {};

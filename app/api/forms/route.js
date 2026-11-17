@@ -16,7 +16,8 @@ export async function POST(req) {
   if (email && !isEmail(email)) return bad('Email inválido / Invalid email');
   let vehicle_id = int(b.vehicle_id);
   if (vehicle_id && !(await one('select id from vehicles where id=$1', [vehicle_id]))) vehicle_id = null;
-  const base = { name, phone, email, vehicle_id, user_id: user?.id || null };
+  const source = str(b.source, 60) || 'Sitio web';
+  const base = { name, phone, email, vehicle_id, user_id: user?.id || null, source };
 
   switch (b.kind) {
     case 'inquiry': {

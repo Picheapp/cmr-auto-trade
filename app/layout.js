@@ -3,6 +3,8 @@ import { Barlow_Condensed, Inter } from 'next/font/google';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { CompareBar } from '@/components/VehicleActions';
+import SourceTracker from '@/components/SourceTracker';
+import { waLink } from '@/lib/shared';
 import { getLang, dict } from '@/lib/i18n';
 import { getUser, isStaff } from '@/lib/auth';
 import { getSettings, DEFAULT_SETTINGS } from '@/lib/db';
@@ -36,6 +38,13 @@ export default async function RootLayout({ children }) {
         {children}
         <Footer t={t} s={s} lang={lang} />
         <CompareBar label={t.nav_compare} />
+        <SourceTracker />
+        {(() => {
+          const wa = waLink(s.whatsapp, lang === 'es' ? 'Hola CMR Auto Trade, quiero información.' : 'Hi CMR Auto Trade, I would like information.');
+          return wa
+            ? <a className="fab wa" href={wa} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬</a>
+            : <a className="fab" href="/#contact" aria-label={t.nav_contact}>💬</a>;
+        })()}
       </body>
     </html>
   );

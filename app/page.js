@@ -27,6 +27,7 @@ export default async function Home() {
   for (const v of all) brandCount[(v.make || '').toLowerCase()] = (brandCount[(v.make || '').toLowerCase()] || 0) + 1;
   const extraBrands = [...new Set(all.map((v) => v.make))].filter((m) => m && !BRANDS.some((b) => b.toLowerCase() === m.toLowerCase()));
   const brands = [...BRANDS, ...extraBrands].sort((a, b) => (brandCount[b.toLowerCase()] || 0) - (brandCount[a.toLowerCase()] || 0));
+  const makes = [...new Set(all.map((v) => v.make).filter(Boolean))].sort();
   const hero = featured.find((v) => v.make === 'Mercedes-Benz')?.photos?.[0] || all[0]?.photos?.[0] || '/img/l007-87.jpg';
   const card = (v) => <VehicleCard key={v.id} v={v} t={t} lang={lang} fav={favs.has(v.id)} loggedIn={!!user} />;
   const wa = waLink(s.whatsapp, lang === 'es' ? 'Hola CMR Auto Trade, quiero información.' : 'Hi CMR Auto Trade, I would like information.');
@@ -43,10 +44,26 @@ export default async function Home() {
             <Link className="btn" href="/inventory">{t.search_inventory}</Link>
             <Link className="btn ghost" href="#featured">{t.browse}</Link>
           </div>
+          <form className="qsearch" action="/inventory" method="get">
+            <select name="make" defaultValue=""><option value="">{t.make}: {t.any}</option>{makes.map((m) => <option key={m}>{m}</option>)}</select>
+            <select name="category" defaultValue=""><option value="">{t.category}: {t.any}</option>{CATEGORIES.filter((c) => catCount[c.key]).map((c) => <option key={c.key} value={c.key}>{c[lang]}</option>)}</select>
+            <input name="price_max" type="number" min="0" step="1000" placeholder={t.price_max} />
+            <input name="q" placeholder={t.search} />
+            <button className="btn">{t.search_inventory}</button>
+          </form>
         </div>
       </section>
 
-      <section className="wrap" style={{ paddingTop: 10 }}>
+      <section className="wrap">
+        <div className="trust">
+          <div><b>{all.length}</b><small>{lang === 'es' ? 'Unidades disponibles' : 'Units available'}</small></div>
+          <div><b>{makes.length}</b><small>{lang === 'es' ? 'Marcas en inventario' : 'Brands in stock'}</small></div>
+          <div><b>100%</b><small>{lang === 'es' ? 'Fotos reales de cada unidad' : 'Real photos of every unit'}</small></div>
+          <div><b>{lang === 'es' ? 'Sí' : 'Yes'}</b><small>{lang === 'es' ? 'Financiamiento y trade-in' : 'Financing & trade-in'}</small></div>
+        </div>
+      </section>
+
+      <section className="wrap" style={{ paddingTop: 56 }}>
         <div className="row-head"><h2 className="h2">{t.categories}</h2></div>
         <Rail>
           {CATEGORIES.map((c) => (
