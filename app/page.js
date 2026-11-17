@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { q, getSettings } from '@/lib/db';
 import { listVehicles, favIds } from '@/lib/vehicles';
-import { getLang, dict, CATEGORIES, BRANDS, waLink } from '@/lib/i18n';
+import { getLang, dict, CATEGORIES, BRANDS, NEW_BRANDS, PREMIUM, waLink } from '@/lib/i18n';
 import { getUser } from '@/lib/auth';
 import Rail from '@/components/Rail';
 import VehicleCard from '@/components/VehicleCard';
@@ -28,7 +28,8 @@ export default async function Home() {
   const extraBrands = [...new Set(all.map((v) => v.make))].filter((m) => m && !BRANDS.some((b) => b.toLowerCase() === m.toLowerCase()));
   const brands = [...BRANDS, ...extraBrands].sort((a, b) => (brandCount[b.toLowerCase()] || 0) - (brandCount[a.toLowerCase()] || 0));
   const makes = [...new Set(all.map((v) => v.make).filter(Boolean))].sort();
-  const hero = featured.find((v) => v.make === 'Mercedes-Benz')?.photos?.[0] || all[0]?.photos?.[0] || '/img/l007-87.jpg';
+  const tradeImg = all.find((v) => v.stock === 'L004-05')?.photos?.[0] || all.find((v) => v.body_type === 'Pickup')?.photos?.[0] || '/img/promo-comercial.jpg';
+  const hero = featured.find((v) => v.stock === 'L007-18')?.photos?.[0] || all[0]?.photos?.[0] || '/img/promo-cmr.jpg';
   const card = (v) => <VehicleCard key={v.id} v={v} t={t} lang={lang} fav={favs.has(v.id)} loggedIn={!!user} />;
   const wa = waLink(s.whatsapp, lang === 'es' ? 'Hola CMR Auto Trade, quiero información.' : 'Hi CMR Auto Trade, I would like information.');
 
@@ -37,7 +38,7 @@ export default async function Home() {
       <section className="hero">
         <img className="bg" src={hero} alt="" />
         <div className="wrap in">
-          <div className="kick">CMR Auto Trade · Puerto Rico</div>
+          <div className="kick">CMR Auto Trade · {t.slogan}</div>
           <h1>{lang === 'es' ? <>¡Encuentra tu <span>próximo auto!</span></> : <>Find your <span>next ride.</span></>}</h1>
           <p>{t.hero_sub}</p>
           <div className="ctas">
@@ -114,15 +115,45 @@ export default async function Home() {
       <section className="wrap section" style={{ paddingTop: 0 }}>
         <div className="banners">
           <div className="banner blue">
-            <img src="/img/l007-75.jpg" alt="" />
+            <img src="/img/promo-cmr.jpg" alt="" />
             <div className="kick">{t.nav_financing}</div><h3>{t.fin_banner_t}</h3><p>{t.fin_banner_s}</p>
             <Link className="btn white" href="/financing" style={{ alignSelf: 'flex-start' }}>{t.fin_banner_b}</Link>
           </div>
           <div className="banner">
-            <img src="/img/l007-60.jpg" alt="" />
+            <img src={tradeImg} alt="" />
             <div className="kick">Trade-In</div><h3>{t.trade_banner_t}</h3><p>{t.trade_banner_s}</p>
             <Link className="btn" href="/trade-in" style={{ alignSelf: 'flex-start' }}>{t.trade_banner_b}</Link>
           </div>
+        </div>
+      </section>
+
+      <section className="wrap section" style={{ paddingTop: 0 }}>
+        <div className="showcase">
+          <img src="/img/promo-premium.jpg" alt="CMR Auto Trade Premium Collection" />
+          <div>
+            <div className="kick">{t.premium_kick}</div>
+            <h3>{t.premium_t}</h3>
+            <p>{t.premium_s}</p>
+            <ul className="tags">{PREMIUM.map((b) => <li key={b}>{b}</li>)}</ul>
+            <a className="btn" href={waLink(s.whatsapp, lang === 'es' ? 'Hola CMR, me interesa la línea premium. ¿Qué unidades tienen disponibles?' : 'Hi CMR, I am interested in the premium line. What units are available?') || '/#contact'} target="_blank" rel="noopener noreferrer">{t.premium_b}</a>
+          </div>
+        </div>
+        <div className="showcase rev">
+          <img src="/img/promo-comercial.jpg" alt="CMR Auto Trade unidades comerciales" />
+          <div>
+            <div className="kick">{lang === 'es' ? 'Comerciales' : 'Commercial'}</div>
+            <h3>{t.commercial_t}</h3>
+            <p>{t.commercial_s}</p>
+            <Link className="btn" href="/inventory?category=commercial">{t.commercial_b} ({catCount.commercial + catCount.van})</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="wrap section" style={{ paddingTop: 0 }}>
+        <div className="row-head"><h2 className="h2">{t.brands_t}</h2></div>
+        <div className="contact-grid">
+          <div className="box"><div className="kick">{t.brands_new}</div><ul className="tags" style={{ marginTop: 12 }}>{NEW_BRANDS.map((b) => <li key={b}><Link href={`/inventory?make=${encodeURIComponent(b)}`}>{b}</Link></li>)}</ul></div>
+          <div className="box"><div className="kick">{t.brands_used}</div><h3 style={{ fontFamily: 'var(--head)', fontSize: 34, textTransform: 'uppercase', marginTop: 8 }}>{t.brands_used_all}</h3><p className="sub">{t.remote_s}</p></div>
         </div>
       </section>
 
@@ -147,6 +178,7 @@ export default async function Home() {
           <div><div className="ico">$</div><h4>{t.why2_t}</h4><p>{t.why2_s}</p></div>
           <div><div className="ico">⇄</div><h4>{t.why3_t}</h4><p>{t.why3_s}</p></div>
           <div><div className="ico">★</div><h4>{t.why4_t}</h4><p>{t.why4_s}</p></div>
+          <div><div className="ico">🚚</div><h4>{t.remote_t}</h4><p>{t.remote_s}</p></div>
         </div>
       </section>
 

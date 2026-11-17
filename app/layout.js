@@ -20,7 +20,7 @@ export async function generateMetadata() {
     metadataBase: new URL(base),
     title: { default: 'CMR Auto Trade | Autos en Puerto Rico', template: '%s | CMR Auto Trade' },
     description: 'Inventario de pickups, SUVs, deportivos y autos de lujo en Puerto Rico. Financiamiento, trade-in y citas en línea.',
-    openGraph: { siteName: 'CMR Auto Trade', type: 'website', images: ['/img/l007-87.jpg'] },
+    openGraph: { siteName: 'CMR Auto Trade', type: 'website', images: ['/img/promo-cmr.jpg'] },
     icons: { icon: '/img/logo.jpg' },
   };
 }
