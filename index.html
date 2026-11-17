@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMR Auto Trade — Inventario</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--card:#11131c;--line:#1f2333;--txt:#eef1f7;--mut:#8b93a7;--blue:#1e5bff;--gold:#f5b40a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:Inter,system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+header{position:sticky;top:0;z-index:20;background:rgba(7,8,13,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
+.nav img{height:44px;border-radius:6px}
+.nav .links{display:flex;gap:22px;font-size:14px;color:var(--mut)}
+.nav .links a:hover{color:var(--txt)}
+.btn{display:inline-block;background:var(--gold);color:#111;font-weight:600;padding:12px 22px;border-radius:999px;border:0;cursor:pointer;font-size:15px}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid #3a4157}
+.hero{position:relative;min-height:78vh;display:flex;align-items:flex-end;overflow:hidden}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.45)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,var(--bg))}
+.hero .in{position:relative;z-index:2;max-width:1200px;margin:auto;width:100%;padding:0 20px 70px}
+.kick{color:var(--gold);font-weight:600;letter-spacing:.18em;font-size:13px;text-transform:uppercase}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:clamp(44px,8vw,92px);line-height:.95;text-transform:uppercase;margin:12px 0 18px}
+h1 span{color:var(--blue)}
+.hero p{max-width:540px;color:#c9cfdd;font-size:17px;line-height:1.55;margin-bottom:26px}
+.stats{display:flex;gap:38px;margin-top:36px}
+.stats b{font-family:"Barlow Condensed";font-size:38px;display:block}
+.stats small{color:var(--mut);font-size:13px}
+section{max-width:1200px;margin:auto;padding:70px 20px}
+h2{font-family:"Barlow Condensed";font-size:44px;text-transform:uppercase;margin-bottom:6px}
+.sub{color:var(--mut);margin-bottom:28px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--mut);padding:9px 16px;border-radius:999px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.bar input{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 16px;border-radius:999px;font-size:14px}
+.bar select{background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 14px;border-radius:999px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#34405f}
+.ph{position:relative;aspect-ratio:4/3;background:#000}
+.ph img{width:100%;height:100%;object-fit:cover}
+.lot{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);border:1px solid var(--gold);color:var(--gold);font-weight:600;font-size:12px;padding:4px 10px;border-radius:6px;letter-spacing:.05em}
+.cnt{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);font-size:12px;padding:4px 9px;border-radius:6px}
+.body{padding:16px 18px 18px}
+.body h3{font-family:"Barlow Condensed";font-size:25px;text-transform:uppercase}
+.meta{color:var(--mut);font-size:13px;margin:4px 0 14px}
+.row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:12px;font-size:14px}
+.row b{color:var(--gold)}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.why div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+.why h4{font-family:"Barlow Condensed";font-size:24px;text-transform:uppercase;margin:10px 0 6px}
+.why p{color:var(--mut);font-size:14px;line-height:1.5}
+.ico{width:42px;height:42px;border-radius:10px;background:rgba(30,91,255,.15);display:grid;place-items:center;color:var(--blue);font-size:20px}
+.cta{background:linear-gradient(120deg,#0d1a45,#11131c);border:1px solid var(--line);border-radius:22px;padding:44px;display:grid;grid-template-columns:1.2fr 1fr;gap:30px}
+.cta form{display:grid;gap:10px}
+.cta input,.cta select,.cta textarea{background:#0a0c14;border:1px solid var(--line);color:var(--txt);padding:12px 14px;border-radius:10px;font:inherit}
+.ok{color:#5be08f;font-size:14px;display:none}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center;padding:30px 20px}
+footer img{height:38px;border-radius:6px;margin-bottom:10px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:50;display:none;flex-direction:column}
+.modal.on{display:flex}
+.mtop{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;gap:12px}
+.mtop h3{font-family:"Barlow Condensed";font-size:26px;text-transform:uppercase}
+.x{background:none;border:1px solid #3a4157;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;flex:none}
+.stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+.stage img{max-width:100%;max-height:100%;object-fit:contain}
+.arr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:0;color:#fff;width:48px;height:48px;border-radius:50%;font-size:24px;cursor:pointer}
+.arr.l{left:14px}.arr.r{right:14px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding:12px 20px}
+.thumbs img{height:62px;width:84px;object-fit:cover;border-radius:6px;opacity:.5;cursor:pointer;flex:none}
+.thumbs img.on{opacity:1;outline:2px solid var(--gold)}
+.mfoot{display:flex;justify-content:space-between;align-items:center;padding:0 20px 18px;gap:10px;flex-wrap:wrap;color:var(--mut);font-size:14px}
+@media(max-width:760px){.nav .links{display:none}.cta{grid-template-columns:1fr;padding:26px}.stats{gap:22px}}
+</style></head><body>
+<header><div class="nav"><a href="#inicio"><img src="img/logo.jpg" alt="CMR Auto Trade"></a>
+<div class="links"><a href="#inventario">Inventario</a><a href="#nosotros">Por qué CMR</a><a href="#contacto">Contacto</a></div>
+<a class="btn" href="#contacto">Cotizar</a></div></header>
+
+<div class="hero" id="inicio"><img class="bg" src="img/l007-87.jpg" alt="">
+<div class="in"><div class="kick">CMR Auto Trade · Puerto Rico</div>
+<h1>Tu próximo auto<br><span>te está esperando</span></h1>
+<p>Pickups, SUVs, deportivos y lujo. Inventario actualizado por lote, con fotos reales de cada unidad.</p>
+<a class="btn" href="#inventario">Ver inventario</a> &nbsp; <a class="btn ghost" href="#contacto">Hablar con un asesor</a>
+<div class="stats"><div><b id="sTot">0</b><small>Unidades</small></div><div><b id="sLot">0</b><small>Lotes</small></div><div><b id="sBr">0</b><small>Marcas</small></div></div>
+</div></div>
+
+<section id="inventario"><h2>Inventario</h2><p class="sub">Toca cualquier unidad para ver todas sus fotos.</p>
+<div class="bar" id="cats"></div>
+<div class="bar"><input id="q" placeholder="Buscar marca o modelo…"><select id="lot"></select></div>
+<div class="grid" id="grid"></div></section>
+
+<section id="nosotros"><h2>Por qué CMR</h2><p class="sub">Compra con confianza.</p>
+<div class="why">
+<div><div class="ico">✓</div><h4>Unidades verificadas</h4><p>Cada vehículo se fotografía e inventaria en persona.</p></div>
+<div><div class="ico">$</div><h4>Financiamiento</h4><p>Te ayudamos a encontrar el plan que se ajuste a tu presupuesto.</p></div>
+<div><div class="ico">⇄</div><h4>Trade-in</h4><p>Trae tu auto actual y úsalo como pronto.</p></div>
+<div><div class="ico">★</div><h4>Todas las marcas</h4><p>Ford, Jeep, RAM, BMW, Mercedes-Benz y más.</p></div>
+</div></section>
+
+<section id="contacto"><div class="cta"><div><div class="kick">Cotiza hoy</div><h2 style="margin-top:8px">¿Te interesa una unidad?</h2>
+<p class="sub" style="margin-top:10px">Déjanos tus datos y el código de la unidad (ej. L007-03). Un asesor te contactará.</p>
+<p style="color:var(--mut);font-size:14px">Teléfono / WhatsApp: <b style="color:var(--txt)">(787) 000-0000</b></p></div>
+<form id="f"><input required placeholder="Nombre"><input required placeholder="Teléfono"><select id="fUnit"></select>
+<textarea rows="3" placeholder="Mensaje (opcional)"></textarea><button class="btn">Enviar solicitud</button><div class="ok" id="ok">¡Gracias! Te contactaremos pronto.</div></form></div></section>
+
+<footer><img src="img/logo.jpg" alt=""><br>© 2026 CMR Auto Trade · Inventario sujeto a disponibilidad.</footer>
+
+<div class="modal" id="m"><div class="mtop"><div><div class="kick" id="mLot"></div><h3 id="mName"></h3></div><button class="x" id="mx">×</button></div>
+<div class="stage"><button class="arr l" id="pv">‹</button><img id="mImg" alt=""><button class="arr r" id="nx">›</button></div>
+<div class="thumbs" id="mTh"></div>
+<div class="mfoot"><span id="mMeta"></span><a class="btn" href="#contacto" id="mCta">Me interesa</a></div></div>
+
+<script>
+const INV=[{"id": "L007-01", "lote": "L007", "name": "Ford Mustang GT", "cat": "Deportivo", "color": "Naranja", "photos": ["img/l007-01.jpg", "img/l007-02.jpg", "img/l007-03.jpg", "img/l007-15.jpg"]}, {"id": "L007-02", "lote": "L007", "name": "Ford Explorer", "cat": "SUV", "color": "Gris", "photos": ["img/l007-14.jpg", "img/l007-08.jpg", "img/l007-10.jpg", "img/l007-11.jpg", "img/l007-07.jpg", "img/l007-04.jpg", "img/l007-05.jpg", "img/l007-06.jpg", "img/l007-09.jpg"]}, {"id": "L007-03", "lote": "L007", "name": "Ford Ranger Raptor", "cat": "Pickup", "color": "Blanca", "photos": ["img/l007-17.jpg", "img/l007-12.jpg", "img/l007-13.jpg", "img/l007-16.jpg", "img/l007-18.jpg"]}, {"id": "L007-04", "lote": "L007", "name": "Ford Expedition", "cat": "SUV", "color": "Blanca", "photos": ["img/l007-21.jpg", "img/l007-22.jpg", "img/l007-19.jpg", "img/l007-20.jpg"]}, {"id": "L007-05", "lote": "L007", "name": "Ford Bronco 4 puertas", "cat": "SUV", "color": "Blanca", "photos": ["img/l007-26.jpg", "img/l007-24.jpg", "img/l007-25.jpg", "img/l007-27.jpg", "img/l007-28.jpg", "img/l007-29.jpg", "img/l007-33.jpg"]}, {"id": "L007-06", "lote": "L007", "name": "Ford Bronco 2 puertas", "cat": "SUV", "color": "Arena", "photos": ["img/l007-32.jpg", "img/l007-23.jpg", "img/l007-30.jpg", "img/l007-31.jpg"]}, {"id": "L007-07", "lote": "L007", "name": "Jeep Gladiator", "cat": "Pickup", "color": "Negra", "photos": ["img/l007-35.jpg", "img/l007-36.jpg", "img/l007-37.jpg", "img/l007-44.jpg", "img/l007-42.jpg", "img/l007-43.jpg", "img/l007-41.jpg", "img/l007-34.jpg", "img/l007-38.jpg", "img/l007-39.jpg", "img/l007-40.jpg"]}, {"id": "L007-08", "lote": "L007", "name": "Jeep Grand Cherokee", "cat": "SUV", "color": "Blanca", "photos": ["img/l007-57.jpg", "img/l007-45.jpg", "img/l007-46.jpg"]}, {"id": "L007-09", "lote": "L007", "name": "RAM 1500", "cat": "Pickup", "color": "Blanca", "photos": ["img/l007-48.jpg", "img/l007-47.jpg", "img/l007-49.jpg", "img/l007-50.jpg", "img/l007-58.jpg"]}, {"id": "L007-10", "lote": "L007", "name": "Jeep (SUV)", "cat": "SUV", "color": "Verde", "photos": ["img/l007-55.jpg", "img/l007-52.jpg", "img/l007-53.jpg", "img/l007-56.jpg", "img/l007-51.jpg", "img/l007-54.jpg"]}, {"id": "L007-11", "lote": "L007", "name": "RAM 1500 eTorque Overland", "cat": "Pickup", "color": "Blanca", "photos": ["img/l007-65.jpg", "img/l007-59.jpg", "img/l007-60.jpg", "img/l007-61.jpg", "img/l007-62.jpg", "img/l007-63.jpg", "img/l007-64.jpg"]}, {"id": "L007-12", "lote": "L007", "name": "RAM 1500 2026", "cat": "Pickup", "color": "Blanca", "photos": ["img/l007-67.jpg", "img/l007-66.jpg"]}, {"id": "L007-13", "lote": "L007", "name": "RAM 1500 Rocky Ridge", "cat": "Pickup", "color": "Negra", "photos": ["img/l007-69.jpg", "img/l007-70.jpg", "img/l007-68.jpg"]}, {"id": "L007-14", "lote": "L007", "name": "RAM Heavy Duty", "cat": "Pickup", "color": "Gris", "photos": ["img/l007-71.jpg"]}, {"id": "L007-15", "lote": "L007", "name": "Jeep Gladiator Willys", "cat": "Pickup", "color": "Blanca", "photos": ["img/l007-73.jpg", "img/l007-72.jpg", "img/l007-74.jpg"]}, {"id": "L007-16", "lote": "L007", "name": "BMW X5 sDrive40i", "cat": "Lujo", "color": "Gris", "photos": ["img/l007-75.jpg", "img/l007-76.jpg", "img/l007-78.jpg", "img/l007-77.jpg", "img/l007-79.jpg", "img/l007-80.jpg"]}, {"id": "L007-17", "lote": "L007", "name": "BMW X3 30 xDrive", "cat": "Lujo", "color": "Blanca", "photos": ["img/l007-81.jpg", "img/l007-83.jpg", "img/l007-82.jpg", "img/l007-84.jpg", "img/l007-85.jpg"]}, {"id": "L007-18", "lote": "L007", "name": "Mercedes-AMG G63", "cat": "Lujo", "color": "Amarilla", "photos": ["img/l007-87.jpg", "img/l007-86.jpg", "img/l007-88.jpg", "img/l007-90.jpg", "img/l007-89.jpg", "img/l007-91.jpg", "img/l007-92.jpg"]}];
+const brand=v=>v.name.split(' ')[0].replace('Mercedes-AMG','Mercedes');
+let cat='Todos',cur=null,idx=0;
+const $=s=>document.querySelector(s);
+const cats=['Todos',...new Set(INV.map(v=>v.cat))];
+$('#cats').innerHTML=cats.map(c=>`<button class="chip${c==cat?' on':''}" data-c="${c}">${c}</button>`).join('');
+$('#cats').onclick=e=>{if(!e.target.dataset.c)return;cat=e.target.dataset.c;document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.c==cat));render()};
+const lots=[...new Set(INV.map(v=>v.lote))].sort();
+$('#lot').innerHTML='<option value="">Todos los lotes</option>'+lots.map(l=>`<option>${l}</option>`).join('');
+$('#fUnit').innerHTML='<option value="">Unidad de interés</option>'+INV.map(v=>`<option value="${v.id}">${v.id} · ${v.name}</option>`).join('');
+$('#sTot').textContent=INV.length;$('#sLot').textContent=lots.length;$('#sBr').textContent=new Set(INV.map(brand)).size;
+function render(){const q=$('#q').value.toLowerCase(),l=$('#lot').value;
+ const list=INV.filter(v=>(cat=='Todos'||v.cat==cat)&&(!l||v.lote==l)&&(v.name+' '+v.color).toLowerCase().includes(q));
+ $('#grid').innerHTML=list.length?list.map(v=>`<div class="card" data-id="${v.id}"><div class="ph"><img loading="lazy" src="${v.photos[0]}" alt="${v.name}"><span class="lot">${v.id}</span><span class="cnt">📷 ${v.photos.length}</span></div>
+ <div class="body"><h3>${v.name}</h3><div class="meta">${v.cat} · ${v.color}</div><div class="row"><span>Precio</span><b>Consultar</b></div></div></div>`).join(''):'<p class="sub">No hay unidades con ese filtro.</p>';}
+$('#q').oninput=render;$('#lot').onchange=render;
+$('#grid').onclick=e=>{const c=e.target.closest('.card');if(c)open(INV.find(v=>v.id==c.dataset.id))};
+function open(v){cur=v;idx=0;$('#mLot').textContent=v.id;$('#mName').textContent=v.name;$('#mMeta').textContent=v.cat+' · '+v.color+' · Precio: Consultar';
+ $('#mTh').innerHTML=v.photos.map((p,i)=>`<img src="${p}" data-i="${i}">`).join('');show();$('#m').classList.add('on');document.body.style.overflow='hidden'}
+function show(){$('#mImg').src=cur.photos[idx];document.querySelectorAll('#mTh img').forEach((t,i)=>t.classList.toggle('on',i==idx));
+ const n=cur.photos.length;$('#pv').style.display=$('#nx').style.display=n>1?'':'none'}
+function close(){$('#m').classList.remove('on');document.body.style.overflow=''}
+$('#mx').onclick=close;$('#pv').onclick=()=>{idx=(idx-1+cur.photos.length)%cur.photos.length;show()};$('#nx').onclick=()=>{idx=(idx+1)%cur.photos.length;show()};
+$('#mTh').onclick=e=>{if(e.target.dataset.i){idx=+e.target.dataset.i;show()}};
+$('#mCta').onclick=()=>{$('#fUnit').value=cur.id;close()};
+document.onkeydown=e=>{if(!cur||!$('#m').classList.contains('on'))return;if(e.key=='Escape')close();if(e.key=='ArrowRight')$('#nx').click();if(e.key=='ArrowLeft')$('#pv').click()};
+let sx=0;$('.stage').addEventListener('touchstart',e=>sx=e.touches[0].clientX);$('.stage').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40)(d<0?$('#nx'):$('#pv')).click()});
+$('#f').onsubmit=e=>{e.preventDefault();$('#ok').style.display='block';e.target.reset()};
+render();
+</script></body></html>
