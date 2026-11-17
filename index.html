@@ -112,9 +112,9 @@ section{padding:70px 0 0}
 .why .ic{width:48px;height:48px;border-radius:14px;background:var(--grad);display:grid;place-items:center;font-size:22px;margin-bottom:14px}
 .why h4{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:24px;text-transform:uppercase}.why p{color:var(--mut);font-size:14px}
 .cta{border-radius:28px;padding:44px;display:grid;grid-template-columns:1.1fr 1fr;gap:30px;background:radial-gradient(ellipse at 0% 0%,rgba(61,106,150,.3),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(201,168,106,.14),transparent 55%),var(--bg2);border:1px solid rgba(255,255,255,.1)}
-.cta form{display:grid;gap:10px}.cta input,.cta select,.cta textarea{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px}
+.cta>*{min-width:0}.cta form{display:grid;gap:10px;min-width:0}.cta form>*{width:100%;max-width:100%;min-width:0}.cta select{text-overflow:ellipsis}.cta input,.cta select,.cta textarea{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px}
 .cta dl{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-top:18px;font-size:15px}.cta dt{color:var(--mut)}
-@media(max-width:800px){.cta{grid-template-columns:1fr;padding:26px}}
+@media(max-width:800px){.cta{grid-template-columns:minmax(0,1fr);padding:22px 18px;border-radius:22px}.cta dl{grid-template-columns:90px minmax(0,1fr);font-size:14px}.cta dd{overflow-wrap:anywhere}.cta input,.cta select,.cta textarea,.bar input,.bar select,.qs input,.qs select{font-size:16px}}
 footer{margin-top:80px;border-top:1px solid var(--line);padding:36px 0;color:var(--mut);font-size:13px;text-align:center}footer img{height:44px;border-radius:8px;margin:0 auto 12px}
 .fab{position:fixed;right:20px;bottom:20px;z-index:50;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:linear-gradient(120deg,#13a34a,#3ddc84);box-shadow:0 12px 30px rgba(0,0,0,.5);animation:pulse 2.4s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(61,220,132,.5)}50%{box-shadow:0 0 0 14px rgba(61,220,132,0)}}
@@ -184,7 +184,7 @@ body{padding-bottom:70px}.fab{display:none}.modal{bottom:0}.mfoot{padding-bottom
 
 <section id="contacto" class="reveal"><div class="wrap"><div class="cta"><div><div class="kick">Cotiza hoy</div><h2 class="h2" style="margin-top:8px">¿Te interesa una <span class="grad-t">unidad?</span></h2>
 <p style="color:#cbd3e3;margin-top:12px">Escríbenos y un asesor te contesta por WhatsApp con precio, fotos y opciones de financiamiento.</p>
-<dl><dt>Teléfono</dt><dd>787-640-4129</dd><dt>WhatsApp</dt><dd><a href="https://wa.me/17876404129" target="_blank" rel="noopener">787-640-4129</a></dd><dt>Email</dt><dd>cmrautotrade@gmail.com</dd><dt>Correo</dt><dd>PO Box 271, Cidra, PR 00739</dd></dl></div>
+<dl><dt>Teléfono</dt><dd><a href="tel:7876404129">787-640-4129</a></dd><dt>WhatsApp</dt><dd><a href="https://wa.me/17876404129" target="_blank" rel="noopener">787-640-4129</a></dd><dt>Email</dt><dd>cmrautotrade@gmail.com</dd><dt>Correo</dt><dd>PO Box 271, Cidra, PR 00739</dd></dl></div>
 <form id="f"><input id="fn" required placeholder="Nombre"><input id="fp" required placeholder="Teléfono"><select id="fu"><option value="">Unidad de interés (opcional)</option></select>
 <select id="ft"><option>Quiero información</option><option>Quiero financiamiento</option><option>Tengo un trade-in</option><option>Quiero agendar una prueba de manejo</option></select>
 <textarea id="fm" rows="3" placeholder="Mensaje (opcional)"></textarea><button class="btn wa">Enviar por WhatsApp</button>
