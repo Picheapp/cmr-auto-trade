@@ -188,7 +188,7 @@ body{padding-bottom:70px}.fab{display:none}.modal{bottom:0}.mfoot{padding-bottom
 <form id="f"><input id="fn" required placeholder="Nombre"><input id="fp" required placeholder="Teléfono"><select id="fu"><option value="">Unidad de interés (opcional)</option></select>
 <select id="ft"><option>Quiero información</option><option>Quiero financiamiento</option><option>Tengo un trade-in</option><option>Quiero agendar una prueba de manejo</option></select>
 <textarea id="fm" rows="3" placeholder="Mensaje (opcional)"></textarea><button class="btn wa">Enviar por WhatsApp</button>
-<small style="color:var(--mut)">Se abrirá WhatsApp con tu mensaje listo para enviar.</small></form></div></div></section>
+<small style="color:var(--mut)">Se abrirá WhatsApp con tu mensaje listo; solo dale enviar.</small><div id="fok" style="display:none;color:#8ff0bd;font-size:14px"></div></form></div></div></section>
 
 <footer><img src="img/logo.jpg" alt="">© 2026 CMR Auto Trade · Confianza · Calidad · Compromiso · Inventario sujeto a disponibilidad.</footer>
 <a class="fab" href="https://wa.me/17876404129?text=Hola%20CMR%20Auto%20Trade%2C%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
@@ -268,7 +268,13 @@ document.onkeydown=e=>{if(e.key==='Escape'){close()}if(!$('#m').classList.contai
 let sx=0;$('.stage').addEventListener('touchstart',e=>sx=e.touches[0].clientX);$('.stage').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40)(d<0?$('#nx'):$('#pv')).click()});
 // contact → WhatsApp
 $('#f').onsubmit=e=>{e.preventDefault();const u=INV.find(v=>v.id===$('#fu').value);
- const t=`Hola CMR Auto Trade, soy ${$('#fn').value} (${$('#fp').value}). ${$('#ft').value}${u?` sobre la unidad ${u.id}: ${u.name}`:''}.${$('#fm').value?' '+$('#fm').value:''}`;window.open(wa(t),'_blank')};
+ const L=['Hola CMR Auto Trade 👋','','*Nombre:* '+$('#fn').value.trim(),'*Teléfono:* '+$('#fp').value.trim(),'*Interés:* '+$('#ft').value];
+ if(u)L.push('*Unidad:* '+u.id+' · '+u.name+(u.price?' · '+fmt(u.price):''));
+ if($('#fm').value.trim())L.push('*Mensaje:* '+$('#fm').value.trim());
+ L.push('','(Enviado desde la web)');
+ const link=wa(L.join('\n'));
+ const ok=$('#fok');ok.style.display='block';ok.innerHTML='Abriendo WhatsApp… Si no se abre, <a href="'+link+'" target="_blank" rel="noopener" style="text-decoration:underline">toca aquí</a>.';
+ if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){location.href=link}else{const w=window.open(link,'_blank');if(!w)location.href=link}};
 // reveal on scroll
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
